@@ -328,7 +328,7 @@ indy    root=192.168.1.23:/srv/tftp/diskless/client/indy \
 
 ```
 
-&nbsp;&nbsp;&nbsp;&nbsp;Make suren the client's host name is what it should be too:
+&nbsp;&nbsp;&nbsp;&nbsp;Make sure the client's host name is what it should be too:
 
 **/srv/tftp/diskless/\<client\>/etc/sys_id**
 
