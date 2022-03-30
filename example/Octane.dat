@@ -1,0 +1,13 @@
+# Created by client_setup script!
+#
+CLROOT="$DISKLESS/client/$HOST"
+SWAP="$DISKLESS/swap/$HOST"
+NISDOMAIN=""
+SWAPSIZE="128m"
+
+#Client architecture information
+CPUBOARD="IP30"
+CPUARCH="R10000"
+GFXBOARD="MGRAS -mSUBGR=RACER"
+VIDEO=""
+MODE="64bit"
