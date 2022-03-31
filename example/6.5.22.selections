@@ -1,0 +1,23 @@
+# this file was originally stored as /srv/tftp/inst/6.5.22/selections
+from raspberrypi:inst/6.5.22/Overlay/disc1/dist
+from raspberrypi:inst/6.5.22/Overlay/disc2/dist
+from raspberrypi:inst/6.5.22/Overlay/disc3/dist
+from raspberrypi:inst/6.5.22/Overlay/apps/dist
+from raspberrypi:inst/6.5/Foundation/disc1/dist
+from raspberrypi:inst/6.5/Foundation/disc2/dist
+from raspberrypi:inst/6.5/Foundation/nfs/dist
+
+from raspberrypi:inst/6.5/Development/devlibs/dist
+from raspberrypi:inst/6.5/Development/devf/dist
+from raspberrypi:inst/6.5/Development/mipspro/dist
+from raspberrypi:inst/6.5/Development/mipspro_update
+from raspberrypi:inst/6.5/Development/mipspro_c/dist
+from raspberrypi:inst/6.5/Development/mipspro_cee/dist
+from raspberrypi:inst/6.5/Development/mipspro_cpp/dist
+from raspberrypi:inst/6.5/Development/mipspro_ap/dist
+
+# Add this for extra perfcopilot software
+#from raspberrypi:inst/6.5/Extras/perfcopilot/dist
+
+# Add this for buttonfly demos
+#from raspberrypi:inst/6.5/Demos/Apps/dist

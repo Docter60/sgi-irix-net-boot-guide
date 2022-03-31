@@ -1,0 +1,3 @@
+# this file was originally stored as /srv/tftp/inst/5.3/selections
+from raspberrypi:inst/5.3/Foundation/dist
+from raspberrypi:inst/5.3/Development/dist

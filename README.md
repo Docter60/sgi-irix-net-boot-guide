@@ -1,10 +1,9 @@
-# SGI IRIX Net Booting Guide
-
-NOTE: Ellipsis in the code blocks just mean there might be stuff above or below this. Anything to the right of an ellipsis is just a comment.
+# SGI IRIX Net Booting Guide by Example
 
 ## Table of Contents
-- [SGI IRIX Net Booting Guide](#sgi-irix-net-booting-guide)
+- [SGI IRIX Net Booting Guide by Example](#sgi-irix-net-booting-guide-by-example)
   - [Table of Contents](#table-of-contents)
+  - [Typographic Conventions](#typographic-conventions)
   - [Introduction](#introduction)
   - [Requirements](#requirements)
     - [Hardware](#hardware)
@@ -26,6 +25,12 @@ NOTE: Ellipsis in the code blocks just mean there might be stuff above or below 
     - [TFTP failure: get ...](#tftp-failure-get-)
     - [NFS server \<server\> not responding still trying](#nfs-server-server-not-responding-still-trying)
     - [Port mapper failure](#port-mapper-failure)
+
+## Typographic Conventions
+
+Ellipsis (...) in the code blocks just means "there might be stuff above or below this". Anything to the right of an ellipsis is just a comment.
+
+**Boldface** file paths accompanied by a code block show where this file is located and what content will be added/edited.
 
 ## Introduction
 &nbsp;&nbsp;&nbsp;&nbsp;This guide explains how to configure and maintain Silicon Graphics software on a modern linux machine so that one or more networked SGI machines can net boot the IRIX operating system.  The linux server software will be configured to both boot installation material as well as boot IRIX itself for the clients.
@@ -60,6 +65,8 @@ NOTE: Ellipsis in the code blocks just mean there might be stuff above or below 
   - tftpd-hpa
 
 &nbsp;&nbsp;&nbsp;&nbsp;An NFS software package must be available for each IRIX version installed.
+
+&nbsp;&nbsp;&nbsp;&nbsp;Knowledge on how to use inst or the software manager is also needed.  The original [Software Installation and Licensing](https://web.archive.org/web/20211122115932/https://irix7.com/techpubs/007-1364-140.pdf) manual contains that info.  Example selections files are in the example folder of the repository.
 
 ## Concept
 
@@ -103,7 +110,7 @@ INTERFACESv4="eth0"
 192.168.1.153           indy
 ```
 
-&nbsp;&nbsp;&nbsp;&nbsp;Then we'll allow any user from the SGI clients to log in (this is what booterizer does, so it's a copy paste):
+&nbsp;&nbsp;&nbsp;&nbsp;Then we'll allow any user from the SGI clients to log in (this is what [booterizer](https://github.com/unxmaal/booterizer) does, so it's a copy paste):
 
 **/etc/hosts.equiv**
 ```
@@ -205,7 +212,7 @@ TFTP_OPTIONS="--secure --create -vvvv"
 
 `adduser --home /srv/tftp --shell /bin/ksh --disabled-password guest`
 
-&nbsp;&nbsp;&nbsp;&nbsp;Add a .rhosts file to the TFTP directory (this is what booterizer does, so it's a copy paste):
+&nbsp;&nbsp;&nbsp;&nbsp;Add a .rhosts file to the TFTP directory (this is what [booterizer](https://github.com/unxmaal/booterizer) does, so it's a copy paste):
 
 **/srv/tftp/.rhosts**
 ```
@@ -238,7 +245,7 @@ Add the raspberry pi's IP to the mock server's /etc/hosts file.
 
 ## Diskless Tree Installation
 
-&nbsp;&nbsp;&nbsp;&nbsp;SGI's [Diskless Workstation Administration Guide](https://web.archive.org/web/20220326024413/https://techpubs.jurassic.nl/library/manuals/0000/007-0855-080/pdf/007-0855-080.pdf) chapters 3 and 4 (save the last couple of pages of chapter 4) are essentially what the procedure is during this phase.  The installation programs will ask you if you are sure you want to install to an NFS directory. Just continue and install as many versions as you desire.
+&nbsp;&nbsp;&nbsp;&nbsp;SGI's [Diskless Workstation Administration Guide](https://web.archive.org/web/20220326024413/https://techpubs.jurassic.nl/library/manuals/0000/007-0855-080/pdf/007-0855-080.pdf) chapters 3 and 4 (save the last couple of pages of chapter 4) are essentially what the procedure is during this phase.  If there will be many installs, selections files are your friend.  The installation programs will ask you if you are sure you want to install to an NFS directory. Just continue and install as many versions as you desire.
 
 &nbsp;&nbsp;&nbsp;&nbsp;For the example, a share tree will be installed for 64-bit 6.5.22 and 32-bit 5.3.  A client tree will be installed for the Octane and Indy as well.  The generated share and client .dat files can be found in the repository's example folder.
 
