@@ -89,7 +89,7 @@ Ellipsis (...) in the code blocks just means "there might be stuff above or belo
 
 ### isc-dhcp-server
 
-&nbsp;&nbsp;&nbsp;&nbsp;The DHCP server will attempt to start up but fail because configuration is required first. The example only utilizes the ethernet interface.
+&nbsp;&nbsp;&nbsp;&nbsp;The DHCP server will attempt to start up but fail because configuration is required first. The example only utilizes the ethernet interface.  You will need each client's LAN IP address and MAC address from the NVRAM environment variables.  Information on how to find/edit these variables can be found [here](https://web.archive.org/web/20220401164835/http://retrogeeks.org/sgi_bookshelves/SGI_Admin/books/IA_ConfigOps/sgi_html/ch09.html).
 
 &nbsp;&nbsp;&nbsp;&nbsp;The defaults for the isc-dhcp-server will be edited:
 
@@ -117,7 +117,7 @@ INTERFACESv4="eth0"
 + +
 ```
 
-&nbsp;&nbsp;&nbsp;&nbsp;Finally, the server's configuration file will be edited to allow booting protocols, a subnet definition, and the clients' information:
+&nbsp;&nbsp;&nbsp;&nbsp;Finally, the server's configuration file will be edited to allow booting protocols, a subnet definition, and the clients' networking information:
 
 **/etc/dhcp/dhcpd.conf**
 ```
@@ -239,13 +239,15 @@ Add the raspberry pi's IP to the mock server's /etc/hosts file.
 192.168.1.23  raspberrypi
 ```
 
+&nbsp;&nbsp;&nbsp;&nbsp;Mount the diskless directory over NFS:
+
 `mkdir /diskless`
 
 `mount raspberrypi:/srv/tftp/diskless /diskless`
 
 ## Diskless Tree Installation
 
-&nbsp;&nbsp;&nbsp;&nbsp;SGI's [Diskless Workstation Administration Guide](https://web.archive.org/web/20220326024413/https://techpubs.jurassic.nl/library/manuals/0000/007-0855-080/pdf/007-0855-080.pdf) chapters 3 and 4 (save the last couple of pages of chapter 4) are essentially what the procedure is during this phase.  If there will be many installs, selections files are your friend.  The installation programs will ask you if you are sure you want to install to an NFS directory. Just continue and install as many versions as you desire.
+&nbsp;&nbsp;&nbsp;&nbsp;SGI's [Diskless Workstation Administration Guide](https://web.archive.org/web/20220326024413/https://techpubs.jurassic.nl/library/manuals/0000/007-0855-080/pdf/007-0855-080.pdf) chapters 3 and 4 (save the last couple of pages of chapter 4) are essentially what the procedure is during this phase.  For software selection, I used the commands that [booterizer](https://github.com/unxmaal/booterizer) uses for inst.  I then added the NFS dskless_client subsystem.  If there will be many installs, selections files are your friend.  The installation programs will ask you if you are sure you want to install to an NFS directory. Just continue and install as many versions as you desire.
 
 &nbsp;&nbsp;&nbsp;&nbsp;For the example, a share tree will be installed for 64-bit 6.5.22 and 32-bit 5.3.  A client tree will be installed for the Octane and Indy as well.  The generated share and client .dat files can be found in the repository's example folder.
 
@@ -276,7 +278,7 @@ Sometimes the installer might throw warnings about a deadlock being prevented or
 
 ### bootparamd
 
-&nbsp;&nbsp;&nbsp;&nbsp;Bootparams contain a list of client entries used for booting diskless clients.  Referencing the generated version on the mock server, this should be moved over to the Pi server's bootparams file:
+&nbsp;&nbsp;&nbsp;&nbsp;Bootparams contain a list of client entries used for booting diskless clients.  Referencing the generated version on the mock server, this should be moved over to the Pi server's bootparams file.  Note that the raspberry pi's IP is used instead of the hostname.
 
 **/etc/bootparams**
 
@@ -312,7 +314,7 @@ indy    root=192.168.1.23:/srv/tftp/diskless/client/indy \
 
 &nbsp;&nbsp;&nbsp;&nbsp;This is a sample of what exports are required for the octane client:
 
-&nbsp;&nbsp;&nbsp;&nbsp;(Note that the share tree must be identical to the installed client tree software and that the swap is synced)
+&nbsp;&nbsp;&nbsp;&nbsp;(Note that the share tree's software version must be identical to the installed client tree's software version and that the swap export below is synced)
 
 **/etc/exports**
 
@@ -324,7 +326,7 @@ indy    root=192.168.1.23:/srv/tftp/diskless/client/indy \
 /srv/tftp/diskless/share/6.5.22/var/share octane(rw,no_root_squash,no_subtree_check)
 ```
 
-&nbsp;&nbsp;&nbsp;&nbsp;For each client tree installed, the network configuration may be incorrect due to the mock server not knowing it will only be temporary.  Each client tree's hosts file should list itself along with it's LAN IP and the Pi server's IP:
+&nbsp;&nbsp;&nbsp;&nbsp;For each client tree installed, the network configuration may be incorrect due to the mock server not knowing this setup will only be temporary.  Each client tree's hosts file should list itself along with it's LAN IP and the Pi server's IP:
 
 **/srv/tftp/diskless/\<client\>/etc/hosts**
 
@@ -343,7 +345,7 @@ indy    root=192.168.1.23:/srv/tftp/diskless/client/indy \
 octane
 ```
 
-&nbsp;&nbsp;&nbsp;&nbsp;The file systems table may also have incorrect entries pointing to the wrong host.  Maje sure the host these are pointing to are the Pi server:
+&nbsp;&nbsp;&nbsp;&nbsp;The file systems table may also have incorrect entries pointing to the wrong host.  Make sure the host these are pointing to is the Pi server:
 
 **/srv/tftp/diskless/\<client\>/etc/fstab**
 
@@ -357,9 +359,9 @@ raspberrypi:/srv/tftp/diskless/swap/octane /swap nfs rw 0 0
 
 ## SGI Net Boot Setup
 
-&nbsp;&nbsp;&nbsp;&nbsp;Note: Me personally, I took a picture with my phone of the initial environment variables before changing them for ease of reverting back to the previous configuration in case something went wrong.
+&nbsp;&nbsp;&nbsp;&nbsp;Note: Me personally, I took a picture with my phone of the initial environment variables before changing them for ease of reverting back to the previous configuration.
 
-&nbsp;&nbsp;&nbsp;&nbsp;After all that work, it's time for the final step (unless something goes wrong).  The SGI client's boot-up environment variables need to be configured to auto-boot into network mode.  On some machines, there may be other variables that need changing as well.  Documentation can be found at the end of chapter 4 in SGI's [Diskless Workstation Administration Guide](https://web.archive.org/web/20220326024413/https://techpubs.jurassic.nl/library/manuals/0000/007-0855-080/pdf/007-0855-080.pdf).
+&nbsp;&nbsp;&nbsp;&nbsp;After all that work, it's time for the final step (unless something goes wrong).  The SGI client's boot-up environment variables need to be configured to auto-boot into network mode.  On some machines, there may be other variables that need changing as well.  Documentation can be found at the end of chapter 4 in SGI's [Diskless Workstation Administration Guide](https://web.archive.org/web/20220326024413/https://techpubs.jurassic.nl/library/manuals/0000/007-0855-080/pdf/007-0855-080.pdf).  Information on how to find/edit these variables can be found [here](https://web.archive.org/web/20220401164835/http://retrogeeks.org/sgi_bookshelves/SGI_Admin/books/IA_ConfigOps/sgi_html/ch09.html).
 
 ```
 setenv diskless 1
@@ -369,7 +371,7 @@ setenv OSLoadPartition bootp():diskless/client/octane
 init
 ```
 
-&nbsp;&nbsp;&nbsp;&nbsp;Hopefully, starting up the machine gives you a successfull network boot!
+&nbsp;&nbsp;&nbsp;&nbsp;Hopefully, starting up the machine gives you a successfull network boot!  First time setup may involve configuring the kernel, so a clean shut down will be needed.  After that, the boot should be a bit faster.
 
 ## Troubleshooting
 
