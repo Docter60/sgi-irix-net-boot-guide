@@ -161,6 +161,20 @@ host indy {
 RPCNFSDOPTS="--nfs-version 2 --nfs-version 3 --no-nfs-version 4"
 ```
 
+&nbsp;&nbsp;&nbsp;&nbsp;Additionally as a note, IRIX defaults to explicitly communicating over UDP for NFS. You must ensure the client and server have the same protocols enabled for communication to work. In my case, I enabled the server to include UDP below:
+**/etc/nfs.conf**
+```
+...
+[nfsd]
+udp=y
+...
+```
+
+&nbsp;&nbsp;&nbsp;&nbsp;Restart the nfs server (like below) and verify UDP is in the server's rpcinfo list using this command:
+```
+rpcinfo -p
+```
+
 &nbsp;&nbsp;&nbsp;&nbsp;You can check if the specific NFS versions are enabled/disabled by using the following command:
 
 `cat /proc/fs/nfsd/versions`
